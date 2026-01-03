@@ -1,5 +1,5 @@
-import { useState } from "react";
-import ReactFlow, { Controls, Background } from "reactflow";
+import { useState, useCallback } from "react";
+import ReactFlow, { Controls, Background, applyNodeChanges, applyEdgeChanges } from "reactflow";
 import "reactflow/dist/style.css";
 
 import InputNode from "../nodes/InputNode";
@@ -33,6 +33,15 @@ export default function FlowCanvas() {
 
   const [edges, setEdges] = useState([]);
 
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    []
+  );
+
   // backend submit ke liye
   window.flowData = { nodes, edges };
 
@@ -40,8 +49,8 @@ export default function FlowCanvas() {
     <ReactFlow
       nodes={nodes}
       edges={edges}
-      onNodesChange={setNodes}
-      onEdgesChange={setEdges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
       nodeTypes={nodeTypes}
       fitView
       className="bg-slate-800"
